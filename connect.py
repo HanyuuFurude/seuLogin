@@ -6,6 +6,7 @@ import sys
 import json
 import PyQt5
 import logging
+import Hlog
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -28,13 +29,26 @@ form = \
     }
 
 def login():
-    arg=sys.argv
-    print(arg)
-    res = requests.post('https://w.seu.edu.cn/index.php/index/login', form,headers=headers,verify=False)
-    resText = json.loads(res.text)
-    # print('res\tvalue\n________________') # 丑死了，不要表头了
-    logText = ''
-    for x in resText:
-        logText += '\n[ %s ] %s' %(x,resText[x])
-        print('[ %s ] %s'% (x,resText[x]))
-    logging.info(logText)
+    try:
+        res = requests.post('https://w.seu.edu.cn/index.php/index/login', form,headers=headers,verify=False)
+        resText = json.loads(res.text)
+        Hlog.HlogList(resText,Hlog.info,True)
+    #     logText = ''
+    #     for x in resText:
+    #         logText += '\n[ %s ] %s' %(x,resText[x])
+    #         print('[ %s ] %s'% (x,resText[x]))
+    #     logging.info(logText)
+    except Exception as e:
+        Hlog.Hlog(str(e),Hlog.error,True)
+def logout():
+    try:
+        res = requests.post('https://w.seu.edu.cn/index.php/index/logout',headers=headers,verify=False)
+        resText = json.loads(res.text)
+        Hlog.HlogList(resText,Hlog.info,True)
+        # logText = ''
+        # for x in resText:
+        #     logText += '\n[ %s ] %s' %(x,resText[x])
+        #     print('[ %s ] %s'% (x,resText[x]))
+        # logging.info(logText)
+    except Exception as e:
+        Hlog.Hlog(str(e),Hlog.error,True)

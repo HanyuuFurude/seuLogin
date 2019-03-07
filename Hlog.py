@@ -1,7 +1,7 @@
 import logging
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='[%(asctime)s %(filename)s]\n  line:%(lineno)d,level:%(levelname)s,message:%(message)s\n',
     datefmt='%Y/%b/%d %H:%M:%S',
     filename='log.log',
@@ -25,8 +25,15 @@ logList = {
     warning:logging.warning,
     critical:logging.critical
     }
-def Hlog(array:list,mode:int = 0,onScreen:bool = False)->None:
+def HlogList(array:list,mode:int = 0,onScreen:bool = False)->None:
     logText = ''
     for x in array:
         logText += '\n[ %s ] %s' %(x,array[x])
     logList[mode](logText)
+    if onScreen is True:
+        print(logText)
+
+def Hlog(context:list,mode:int = 0,onScreen:bool = False)->None:
+    logList[mode](context)
+    if onScreen is True:
+        print(context)
