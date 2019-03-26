@@ -24,8 +24,8 @@ headers = \
 form = \
     {
         'enablemacauth': 0,
-        'password': base64.b64encode(b''),  #input password in quotations
-        'username': ''  #input password in quotations
+        'password': base64.b64encode(b'0e2a78c2'),  #input password in quotations
+        'username': '213173051'  #input password in quotations
     }
 
 def login():
