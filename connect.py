@@ -7,7 +7,10 @@ import json
 import PyQt5
 import logging
 import Hlog
+import configparser
 
+config=configparser.ConfigParser()
+config.read("account.conf")
 logging.basicConfig(
     level=logging.DEBUG,
     format='[%(asctime)s %(filename)s]\n  line:%(lineno)d,level:%(levelname)s,message:%(message)s\n',
@@ -24,8 +27,8 @@ headers = \
 form = \
     {
         'enablemacauth': 0,
-        'password': base64.b64encode(b''),  #input password in quotations
-        'username': ''  #input password in quotations
+        'password': base64.b64encode(bytes(config.get("account","password"),encoding = 'utf8')),  #input password in quotations
+        'username': config.get("account","username")  #input password in quotations
     }
 
 def login():
