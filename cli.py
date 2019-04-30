@@ -30,7 +30,7 @@ if __name__ == '__main__':
 		except Exception as e:
 			print('no password after \'-password\'')
 			Hlog.Hlog(str(e),Hlog.error)
-	if '-help' in args:
+	if '-help' or '-h' in args:
 		print('''
 -login: 登录
 -logout: 登出
