@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import (QMainWindow,QPushButton,QStatusBar,QApplication,QMessageBox,QLineEdit,QHBoxLayout,QGroupBox,QVBoxLayout)
+import connect
 
 class App(QMainWindow):
 
@@ -9,27 +10,42 @@ class App(QMainWindow):
         self.title = 'Hanyuu\'s seu login windows [dev]'
         self.left = 100
         self.top = 100
-        self.width = 640
-        self.height = 480
+        self.width = 200
+        self.height = 200
         self.count = 0
-        self.initUI()
-
-
-    def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.statusBar()
         self.statusBar().showMessage('HanyuuDesu')
+        self.btnAccount = QPushButton("修改登录信息", self)
         self.btnLogin = QPushButton('登录', self)
+        self.btnLogin.move(0,0)
+        self.btnSetting = QPushButton('设置', self)
+        self.btnAccount.move(0,50)
         self.btnLogin.setToolTip('登录按钮')
+        self.btnSetting.move(0,100)
         self.btnLogin.clicked.connect(self.on_click)
-        # self.button.move(100, 100)
+        self.btnLogin.clicked.connect(connect.login)
+        self.windowLayout = QVBoxLayout()
+        self.windowLayout.addWidget(self.btnAccount)
+        self.windowLayout.addWidget(self.btnLogin)
+        self.windowLayout.addWidget(self.btnSetting)
+        self.setLayout(self.windowLayout)
+        self.initUI()
+
+
+    def initUI(self):
         self.show()
 
     # @pyqtSlot()
     def on_click(self):
         self.statusBar().showMessage('点按了'+(str)(self.count)+' 次')
-        self.count+=1
+        self.count += 1
+        buttonReply = QMessageBox.information(self, "seuLogin", "return information", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        if buttonReply == QMessageBox.Yes:
+            print("yes")
+        else:
+            print("no")
         print('Hanyuu click')
 
 if __name__ == '__main__':
