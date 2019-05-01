@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtWidgets import (QMainWindow,QPushButton,QStatusBar,QApplication,QMessageBox,QLineEdit,QHBoxLayout,QGroupBox,QVBoxLayout)
+from PyQt5.QtWidgets import (QMainWindow,QPushButton,QStatusBar,QApplication,QMessageBox,QLineEdit,QHBoxLayout,QGroupBox,QVBoxLayout,QWidget)
 import connect
 
 class App(QMainWindow):
@@ -12,6 +12,8 @@ class App(QMainWindow):
         self.top = 100
         self.width = 200
         self.height = 200
+        self.wgtCanvas = QWidget()
+        self.setCentralWidget(self.wgtCanvas)
         self.count = 0
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
@@ -19,18 +21,18 @@ class App(QMainWindow):
         self.statusBar().showMessage('HanyuuDesu')
         self.btnAccount = QPushButton("修改登录信息", self)
         self.btnLogin = QPushButton('登录', self)
-        self.btnLogin.move(0,0)
+        # self.btnLogin.move(0,0)
         self.btnSetting = QPushButton('设置', self)
-        self.btnAccount.move(0,50)
+        # self.btnAccount.move(0,50)
         self.btnLogin.setToolTip('登录按钮')
-        self.btnSetting.move(0,100)
+        # self.btnSetting.move(0,100)
         self.btnLogin.clicked.connect(self.on_click)
         self.btnLogin.clicked.connect(connect.login)
-        self.windowLayout = QVBoxLayout()
+        self.windowLayout = QHBoxLayout(self)
         self.windowLayout.addWidget(self.btnAccount)
         self.windowLayout.addWidget(self.btnLogin)
         self.windowLayout.addWidget(self.btnSetting)
-        self.setLayout(self.windowLayout)
+        self.wgtCanvas.setLayout(self.windowLayout)
         self.initUI()
 
 
