@@ -23,6 +23,7 @@ logList = {
     debug:logging.debug,
     info:logging.info,
     warning:logging.warning,
+    error:logging.error,
     critical:logging.critical
     }
 def HlogList(array:list,mode:int = 0,onScreen:bool = False)->None:
