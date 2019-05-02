@@ -1,0 +1,7 @@
+*.conf
+*.log
+*.lnk
+*.pyc
+*.json
+*~
+**/*.conf

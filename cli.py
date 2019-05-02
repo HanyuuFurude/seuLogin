@@ -10,7 +10,7 @@ if __name__ == '__main__':
     if '-login' in args:
         connect.login()
         time.sleep(3)
-        sys,exit()
+        sys.exit()
     if '-logout' in args:
         connect.logout()
         time.sleep(3)
