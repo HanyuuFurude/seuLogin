@@ -2,7 +2,7 @@ import sys
 # from PyQt5.QtWidgets import *
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import (QMainWindow, QPushButton, QStatusBar, QApplication, QMessageBox,
+from PyQt5.QtWidgets import (QMainWindow, QPushButton, QStatusBar, QApplication, QMessageBox,QTextBrowser,
                              QLineEdit, QHBoxLayout, QGroupBox, QVBoxLayout, QWidget, QGridLayout, QLabel)
 from PyQt5.QtCore import Qt
 import sys
@@ -39,6 +39,9 @@ class App(QMainWindow):
         self.btnLogin.clicked.connect(self.on_click_login)
         self.btnLogin.setToolTip('登录按钮')
 
+        self.btnLogout = QPushButton('登出', self)
+        self.btnLogout.clicked.connect(self.on_click_logout)
+
         self.btnSetting = QPushButton('设置', self)
         self.btnSetting.clicked.connect(self.on_click_setting)
 
@@ -50,6 +53,7 @@ class App(QMainWindow):
         self.windowLayout.addWidget(self.btnAccount)
         self.windowLayout.addWidget(self.btnLog)
         self.windowLayout.addWidget(self.btnLogin)
+        self.windowLayout.addWidget(self.btnLogout)
         self.windowLayout.addWidget(self.btnSetting)
         self.wgtCanvas.setLayout(self.windowLayout)
         self.setWindowTitle(self.title)
@@ -61,17 +65,15 @@ class App(QMainWindow):
 
     #  登录
     def on_click_login(self):
-        buttonReply = QMessageBox.information(
-            self, "seuLogin", "return information", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        if buttonReply == QMessageBox.Yes:
-            print("yes")
-        else:
-            print("no")
+        connect.login()
+
+    #  登出
+    def on_click_logout(self):
+        connect.logout()
 
     # 查看日志
     def on_click_log(self):
-        pass
-
+        self.log = Log()
     # 设置
     def on_click_setting(self):
         QMessageBox.information(self, 'seuLogin', '当前无可用设置', QMessageBox.Ok, QMessageBox.Ok)
@@ -82,7 +84,7 @@ class App(QMainWindow):
         else:
             return event.ignore()
 
-# 修改账户ux
+# 修改账户模块
 class Account(QWidget):
 
     def __init__(self):
@@ -96,6 +98,7 @@ class Account(QWidget):
         self.btnModify = QPushButton("修改")
         self.btnModify.clicked.connect(self.on_click_modify)
         self.btnCancel = QPushButton("取消")
+        self.btnCancel.clicked.connect(self.on_click_cancel)
         self.windowLayout.addWidget(self.lblUsername, 0, 0)
         self.windowLayout.addWidget(self.letUsername, 0, 1)
         self.windowLayout.addWidget(self.lblPassword, 1, 0)
@@ -119,6 +122,26 @@ class Account(QWidget):
             QMessageBox.critical(
                 self, 'seuLogin', '出现错误:\n' + str(e), QMessageBox.Ok, QMessageBox.Ok)
             self.close()
+    # 取消事件
+    def on_click_cancel(self):
+        self.close()
+# 日志模块
+class Log(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('seuLogin日志查看器')
+        self.layout = QHBoxLayout()
+        self.txtBroser = QTextBrowser()
+        self.layout.addWidget(self.txtBroser)
+        self.setLayout(self.layout)
+        self.setContentsMargins(0, 0, 0, 0)
+        self.layout.setContentsMargins(0,0,0,0)
+        try:
+            self.txtBroser.setPlainText(connect.logFile())
+        except Exception as e:
+            QMessageBox.critical(self, 'seuLogin', '错误：\n' + str(e), QMessageBox.Ok, QMessageBox.Ok)
+        self.show()
+
 
 
 if __name__ == '__main__':
