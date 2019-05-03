@@ -3,7 +3,7 @@ seu自动登陆程序
 
 ## 使用方法
 ### 图形界面（大多数用户适用）
-* [下载客户端](/HanyuuFurude/seuLogin/releases/download/v0.0.1alpha/Sapphire.exe)
+* [下载客户端](../../releases/download/v0.0.1alpha/Sapphire.exe)
 * 双击运行即可食用
 ### 命令行下调用
 *　`git clone git@github.com:HanyuuFurude/seuLogin.git`
