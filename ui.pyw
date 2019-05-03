@@ -8,6 +8,9 @@ from PyQt5.QtCore import Qt
 import sys
 import connect
 
+
+
+
 # 主UI类
 
 
@@ -154,5 +157,7 @@ class Log(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    #开启高分辨率适配
+    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
     ex = App()
     sys.exit(app.exec_())
