@@ -103,12 +103,13 @@ def generateForm():
         }
 
 
-def login():
+def login()->str:
     try:
         res = requests.post('https://w.seu.edu.cn/index.php/index/login',
                             generateForm(), headers=generateHeaders(), verify=False)
         resText = json.loads(res.text)
         Hlog.HlogList(resText, Hlog.info, True)
+        return resText['info']
     #     logText = ''
     #     for x in resText:
     #         logText += '\n[ %s ] %s' %(x,resText[x])
@@ -116,15 +117,16 @@ def login():
     #     logging.info(logText)
     except Exception as e:
         Hlog.Hlog(str(e), Hlog.error, True)
-        raise Exception(e)
+        raise e
 
 
-def logout():
+def logout()->str:
     try:
         res = requests.post('https://w.seu.edu.cn/index.php/index/logout',
                             headers=generateHeaders(), verify=True)
         resText = json.loads(res.text)
         Hlog.HlogList(resText, Hlog.info, True)
+        return resText['info']
         # logText = ''
         # for x in resText:
         #     logText += '\n[ %s ] %s' %(x,resText[x])
@@ -132,6 +134,7 @@ def logout():
         # logging.info(logText)
     except Exception as e:
         Hlog.Hlog(str(e), Hlog.error, True)
+        raise e
 
 def logFile():
     try:

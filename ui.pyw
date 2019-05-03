@@ -65,11 +65,19 @@ class App(QMainWindow):
 
     #  登录
     def on_click_login(self):
-        connect.login()
+        try:
+            res = connect.login()
+        except Exception as e:
+            QMessageBox.critical(self,'seuLogin','错误：\n'+str(e),QMessageBox.Ok,QMessageBox.OK)
+        QMessageBox.information(self,'seuLogin',res,QMessageBox.Ok,QMessageBox.Ok)
 
     #  登出
     def on_click_logout(self):
-        connect.logout()
+        try:
+            res = connect.logout()
+        except Exception as e:
+            QMessageBox.critical(self,'seuLogin','错误：\n'+str(e),QMessageBox.Ok,QMessageBox.OK)
+        QMessageBox.information(self,'seuLogin',res,QMessageBox.Ok,QMessageBox.Ok)
 
     # 查看日志
     def on_click_log(self):
