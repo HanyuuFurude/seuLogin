@@ -3,9 +3,11 @@ seu自动登陆程序
 
 ## 使用方法
 ### 图形界面（大多数用户适用）
-* [下载客户端](../../releases/download/v0.0.1alpha/Sapphire.exe)
+* [下载客户端](../../releases/download/v0.0.2alpha/Sapphire.exe)
 * 双击运行即可食用
+
 ### 命令行下调用
+
 *　`git clone git@github.com:HanyuuFurude/seuLogin.git`
 * 切换到目录下
 * 在account.conf文件中填写您的账号密码然后使用下述命令即可登录
@@ -20,8 +22,22 @@ seu自动登陆程序
 ```
 
 ## Log
+
 ### 2019/05/03
-* 很高兴看到 alpha 版本已经完成并且已经打包推送release
+
+*   v0.0.2alpha版本
+*   新增功能（for 用户）
+    *   定时检测登陆状态，若发现断线则自动登录
+*   新增功能（for 开发者）
+    *   新的查询函数
+    *   将主地址从参数中移出成为单独的全局变量（后期将会移动到配置文件）
+    *   少许的代码优化
+*   TODO
+    *   将参数移动到配置文件中以便运行时修改
+    *   更快的启动速度（√）（pyinstaller的硬伤2333）
+
+### 2019/05/03
+* v0.0.1alpha 版本已经完成并且已经打包推送release
 * 有任何反馈请[和我交流](mailto:Furude_Hanyuu@outlook.com),非常感谢
 ### 2019/05/02
 * gui基本功能完成！
