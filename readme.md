@@ -1,12 +1,17 @@
-#Sapphire
-seu自动登陆程序——Sapphire
+# Sapphire
+seu自动登陆程序
 
 ## 使用方法
+### 图形界面（大多数用户适用）
+* [下载客户端](/HanyuuFurude/seuLogin/releases/download/v0.0.1alpha/Sapphire.exe)
+* 双击运行即可食用
+### 命令行下调用
+*　`git clone git@github.com:HanyuuFurude/seuLogin.git`
+* 切换到目录下
+* 在account.conf文件中填写您的账号密码然后使用下述命令即可登录
 
-* 在account.conf文件中填写您的账号密码然后使用命令行即可登录
-* （也可做成快捷方式用于点击或者放进任务计划或者启动项中，详细操作教程将在未来一段时间内得到更新）
-* 也有gui界面备用
 ## 参数
+
 ```
 -login: 登录
 -logout: 登出
@@ -15,6 +20,9 @@ seu自动登陆程序——Sapphire
 ```
 
 ## Log
+### 2019/05/03
+* 很高兴看到 alpha 版本已经完成并且已经打包推送release
+* 有任何反馈请[和我交流](mailto:Furude_Hanyuu@outlook.com),非常感谢
 ### 2019/05/02
 * gui基本功能完成！
 * 正在演进
