@@ -19,6 +19,42 @@ logging.basicConfig(
     filemode='a'
 )
 
+MAIN_URL = 'https://w.seu.edu.cn/index.php/index'
+
+
+def generateHeaders():
+    return \
+        {
+            'Host': 'w.seu.edu.cn',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0 \
+                                     Win64 \
+                                     x64 \
+                                     rv: 66.0) Gecko/20100101 Firefox/66.0',
+            'Accept': 'application/json, text/javascript, */* q=0.01',
+            'Accept-Language': 'zh-CN, zh \
+            q = 0.8, zh-TW \
+            q = 0.7, zh-HK \
+            q = 0.5, en-US \
+            q = 0.3, en \
+            q = 0.2 ',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Referer': 'https: // w.seu.edu.cn /',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Connection': 'keep-alive'
+        }
+
+
+def generateForm():
+    return \
+        {
+            'enablemacauth': '1',
+            # 'password': base64.b64encode(bytes(config.get("account","password"),encoding = 'utf8')),  #input password in quotations
+            # 'username': config.get("account","username")  #input password in quotations
+            'password': getPasswordBase64(),
+            'username': getAccount()
+        }
+
 
 class ConfigException(Exception):
     pass
@@ -69,43 +105,9 @@ def writePassword(password: str)->None:
         raise Exception("密码写入配置文件失败")
 
 
-def generateHeaders():
-    return \
-        {
-            'Host': 'w.seu.edu.cn',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0 \
-                                     Win64 \
-                                     x64 \
-                                     rv: 66.0) Gecko/20100101 Firefox/66.0',
-            'Accept': 'application/json, text/javascript, */* q=0.01',
-            'Accept-Language': 'zh-CN, zh \
-            q = 0.8, zh-TW \
-            q = 0.7, zh-HK \
-            q = 0.5, en-US \
-            q = 0.3, en \
-            q = 0.2 ',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Referer': 'https: // w.seu.edu.cn /',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Requested-With': 'XMLHttpRequest',
-            'Connection': 'keep-alive'
-        }
-
-
-def generateForm():
-    return \
-        {
-            'enablemacauth': '1',
-            # 'password': base64.b64encode(bytes(config.get("account","password"),encoding = 'utf8')),  #input password in quotations
-            # 'username': config.get("account","username")  #input password in quotations
-            'password': getPasswordBase64(),
-            'username': getAccount()
-        }
-
-
 def login()->str:
     try:
-        res = requests.post('https://w.seu.edu.cn/index.php/index/login',
+        res = requests.post(MAIN_URL+'/login',
                             generateForm(), headers=generateHeaders(), verify=False)
         resText = json.loads(res.text)
         Hlog.HlogList(resText, Hlog.info, True)
@@ -122,7 +124,7 @@ def login()->str:
 
 def logout()->str:
     try:
-        res = requests.post('https://w.seu.edu.cn/index.php/index/logout',
+        res = requests.post(MAIN_URL+'/logout',
                             headers=generateHeaders(), verify=True)
         resText = json.loads(res.text)
         Hlog.HlogList(resText, Hlog.info, True)
@@ -136,14 +138,27 @@ def logout()->str:
         Hlog.Hlog(str(e), Hlog.error, True)
         raise e
 
+
+def getStatus()->str:
+    try:
+        res = requests.get(
+            MAIN_URL+'/init', headers=generateHeaders(), verify=True)
+        resText = json.loads(res.text)
+        Hlog.HlogList(resText, Hlog.info, True)
+        return resText['info']
+    except Exception as e:
+        Hlog.Hlog(str(e), Hlog.error, True)
+        raise e
+
+
 def logFile():
     try:
-        with open('log.log','r') as f:
+        with open('log.log', 'r') as f:
             return f.read()
     except Exception as e:
-        Hlog.Hlog(str(e),Hlog.error,True)
+        Hlog.Hlog(str(e), Hlog.error, True)
         raise Exception('当前日志不可读或者不存在')
 
+
 if __name__ == '__main__':
-    writeAccount('Hanyuu')
-    writePassword('Hanyuu')
+    print(getStatus())

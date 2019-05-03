@@ -1,7 +1,10 @@
 *.conf
 *.log
 *.lnk
-*.pyc
-*.json
-*~
+**/*~
+**/*.pyc
 **/*.conf
+**/*.spec
+/build
+/dist
+/.vscode

@@ -2,11 +2,15 @@ import sys
 # from PyQt5.QtWidgets import *
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import (QMainWindow, QPushButton, QStatusBar, QApplication, QMessageBox,QTextBrowser,
+from PyQt5.QtWidgets import (QMainWindow, QPushButton, QStatusBar, QApplication, QMessageBox, QTextBrowser,
                              QLineEdit, QHBoxLayout, QGroupBox, QVBoxLayout, QWidget, QGridLayout, QLabel)
 from PyQt5.QtCore import Qt
 import sys
+import threading
+import time
+import datetime
 import connect
+
 
 # 主UI类
 
@@ -45,7 +49,6 @@ class App(QMainWindow):
         self.btnSetting = QPushButton('设置', self)
         self.btnSetting.clicked.connect(self.on_click_setting)
 
-        self.statusBar()
         self.statusBar().showMessage('欢迎')
 
         # 控件布局
@@ -57,6 +60,7 @@ class App(QMainWindow):
         self.windowLayout.addWidget(self.btnSetting)
         self.wgtCanvas.setLayout(self.windowLayout)
         self.setWindowTitle(self.title)
+        self.updater = None
         self.show()
 
     # 修改账户
@@ -68,31 +72,46 @@ class App(QMainWindow):
         try:
             res = connect.login()
         except Exception as e:
-            QMessageBox.critical(self,'seuLogin','错误：\n'+str(e),QMessageBox.Ok,QMessageBox.OK)
-        QMessageBox.information(self,'seuLogin',res,QMessageBox.Ok,QMessageBox.Ok)
+            QMessageBox.critical(self, 'seuLogin', '错误：\n' +
+                                 str(e), QMessageBox.Ok, QMessageBox.OK)
+        QMessageBox.information(self, 'seuLogin', res,
+                                QMessageBox.Ok, QMessageBox.Ok)
 
     #  登出
     def on_click_logout(self):
         try:
             res = connect.logout()
         except Exception as e:
-            QMessageBox.critical(self,'seuLogin','错误：\n'+str(e),QMessageBox.Ok,QMessageBox.OK)
-        QMessageBox.information(self,'seuLogin',res,QMessageBox.Ok,QMessageBox.Ok)
+            QMessageBox.critical(self, 'seuLogin', '错误：\n' +
+                                 str(e), QMessageBox.Ok, QMessageBox.OK)
+        QMessageBox.information(self, 'seuLogin', res,
+                                QMessageBox.Ok, QMessageBox.Ok)
 
     # 查看日志
     def on_click_log(self):
         self.log = Log()
     # 设置
+
     def on_click_setting(self):
-        QMessageBox.information(self, 'seuLogin', '当前无可用设置', QMessageBox.Ok, QMessageBox.Ok)
+        QMessageBox.information(
+            self, 'seuLogin', '当前无可用设置', QMessageBox.Ok, QMessageBox.Ok)
+
     def closeEvent(self, event):
-        choose = QMessageBox.question(self, 'seuLogin', '真的要退出嘛？', QMessageBox.Yes | QMessageBox.Cancel,QMessageBox.Cancel)
+        choose = QMessageBox.question(
+            self, 'seuLogin', '真的要退出嘛？', QMessageBox.Yes | QMessageBox.Cancel, QMessageBox.Cancel)
         if choose == QMessageBox.Yes:
+            self.updater.stop()
             return super().closeEvent(event)
         else:
             return event.ignore()
 
+    # 修改状态栏信息
+    def modifyStatusBar(self, info: str)->None:
+        self.statusBar().showMessage(info)
+
 # 修改账户模块
+
+
 class Account(QWidget):
 
     def __init__(self):
@@ -131,9 +150,12 @@ class Account(QWidget):
                 self, 'seuLogin', '出现错误:\n' + str(e), QMessageBox.Ok, QMessageBox.Ok)
             self.close()
     # 取消事件
+
     def on_click_cancel(self):
         self.close()
 # 日志模块
+
+
 class Log(QWidget):
     def __init__(self):
         super().__init__()
@@ -143,16 +165,57 @@ class Log(QWidget):
         self.layout.addWidget(self.txtBroser)
         self.setLayout(self.layout)
         self.setContentsMargins(0, 0, 0, 0)
-        self.layout.setContentsMargins(0,0,0,0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
         try:
             self.txtBroser.setPlainText(connect.logFile())
         except Exception as e:
-            QMessageBox.critical(self, 'seuLogin', '错误：\n' + str(e), QMessageBox.Ok, QMessageBox.Ok)
+            QMessageBox.critical(self, 'seuLogin', '错误：\n' +
+                                 str(e), QMessageBox.Ok, QMessageBox.Ok)
         self.show()
 
+# 联网状态巡检器
+
+
+class StatusUpdater(threading.Thread):
+    def __init__(self, handler: App):
+        threading.Thread.__init__(self, name='updater')
+        self.handler = handler
+        self.autoQuery = True
+        self.updateInterval = 600
+        self.updateIntervalWhenFailed = 60
+
+    def run(self):
+        while self.autoQuery:
+            print('running')
+            try:
+                res = connect.getStatus()
+            except Exception as e:
+                self.handler.modifyStatusBar(
+                    datetime.datetime.now().strftime('%H:%M:%S')+'登录信息更新失败')
+                time.sleep(self.updateIntervalWhenFailed)
+                continue
+            self.handler.modifyStatusBar(
+                info=(datetime.datetime.now().strftime('%H:%M:%S')+res))
+            if res == '用户未登录':
+                try:
+                    connect.login()
+                except Exception:
+                    time.sleep(self.updateIntervalWhenFailed)
+                    continue
+            time.sleep(self.updateInterval)
+
+    def stop(self):
+        self.autoQuery = False
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    #开启高分辨率适配
+    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
     ex = App()
+    # 设置联网巡检器
+    updater = StatusUpdater(ex)
+    updater.start()
+    # 将巡检器传递给主线程以便主线程退出时结束巡检器线程
+    ex.updater = updater
     sys.exit(app.exec_())
