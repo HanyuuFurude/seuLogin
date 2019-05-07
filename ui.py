@@ -73,7 +73,8 @@ class App(QMainWindow):
             res = connect.login()
         except Exception as e:
             QMessageBox.critical(self, 'seuLogin', '错误：\n' +
-                                 str(e), QMessageBox.Ok, QMessageBox.OK)
+                                 str(e), QMessageBox.Ok, QMessageBox.Ok)
+            return
         QMessageBox.information(self, 'seuLogin', res,
                                 QMessageBox.Ok, QMessageBox.Ok)
 
