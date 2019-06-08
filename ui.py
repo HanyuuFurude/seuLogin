@@ -61,6 +61,12 @@ class App(QMainWindow):
         self.wgtCanvas.setLayout(self.windowLayout)
         self.setWindowTitle(self.title)
         self.updater = None
+
+
+        # #
+        file = open('ui.qss', 'r')
+        stylesheet = file.read()
+        self.setStyleSheet(stylesheet)
         self.show()
 
     # 修改账户
@@ -134,6 +140,10 @@ class Account(QWidget):
         self.windowLayout.addWidget(self.btnModify, 2, 0)
         self.windowLayout.addWidget(self.btnCancel, 2, 1)
         self.setLayout(self.windowLayout)
+        file = open('ui.qss', 'r')
+        stylesheet = file.read()
+        self.setStyleSheet(stylesheet)
+        self.show()
         self.show()
 
     # 修改事件
@@ -172,6 +182,11 @@ class Log(QWidget):
         except Exception as e:
             QMessageBox.critical(self, 'seuLogin', '错误：\n' +
                                  str(e), QMessageBox.Ok, QMessageBox.Ok)
+
+        file = open('ui.qss', 'r')
+        stylesheet = file.read()
+        self.setStyleSheet(stylesheet)
+        self.show()
         self.show()
 
 # 联网状态巡检器
