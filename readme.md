@@ -1,3 +1,6 @@
+# Attention
+seu-wlan认证方式已改变，此仓库标记为Archived并不再维护
+
 # Sapphire
 seu自动登陆程序
 
